@@ -184,6 +184,11 @@ const (
 	EventVCSConnectionCreated = "vcs_connection:created"
 	EventVCSConnectionDeleted = "vcs_connection:deleted"
 
+	// Asana integration events. `created` also covers a reconnect that
+	// rotates the token in place (UpsertAsanaConnection).
+	EventAsanaConnectionCreated = "asana_connection:created"
+	EventAsanaConnectionDeleted = "asana_connection:deleted"
+
 	// Lark integration events. `created` covers both first-install
 	// (UNIQUE on (workspace_id, agent_id) means at most one row per
 	// agent) and re-install via UpsertLarkInstallation — front-ends

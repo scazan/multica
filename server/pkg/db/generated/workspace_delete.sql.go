@@ -223,6 +223,22 @@ const deleteWorkspaceConnections = `-- name: DeleteWorkspaceConnections :exec
 WITH deleted_github_installations AS (
     DELETE FROM github_installation
     WHERE github_installation.workspace_id = $1
+),
+deleted_asana_comment_links AS (
+    DELETE FROM asana_comment_link
+    WHERE asana_comment_link.workspace_id = $1
+),
+deleted_asana_task_links AS (
+    DELETE FROM asana_task_link
+    WHERE asana_task_link.workspace_id = $1
+),
+deleted_asana_bindings AS (
+    DELETE FROM asana_project_binding
+    WHERE asana_project_binding.workspace_id = $1
+),
+deleted_asana_connections AS (
+    DELETE FROM asana_connection
+    WHERE asana_connection.workspace_id = $1
 )
 DELETE FROM vcs_connection WHERE vcs_connection.workspace_id = $1
 `

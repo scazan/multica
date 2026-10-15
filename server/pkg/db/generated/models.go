@@ -187,6 +187,60 @@ type AgentToLabel struct {
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
 }
 
+type AsanaCommentLink struct {
+	ID            pgtype.UUID        `json:"id"`
+	WorkspaceID   pgtype.UUID        `json:"workspace_id"`
+	TaskLinkID    pgtype.UUID        `json:"task_link_id"`
+	CommentID     pgtype.UUID        `json:"comment_id"`
+	AsanaStoryGid string             `json:"asana_story_gid"`
+	Direction     string             `json:"direction"`
+	CreatedAt     pgtype.Timestamptz `json:"created_at"`
+}
+
+type AsanaConnection struct {
+	ID                   pgtype.UUID        `json:"id"`
+	WorkspaceID          pgtype.UUID        `json:"workspace_id"`
+	AsanaWorkspaceGid    string             `json:"asana_workspace_gid"`
+	AsanaWorkspaceName   string             `json:"asana_workspace_name"`
+	AsanaUserGid         string             `json:"asana_user_gid"`
+	AsanaUserName        string             `json:"asana_user_name"`
+	AsanaUserEmail       string             `json:"asana_user_email"`
+	AccessTokenEncrypted string             `json:"access_token_encrypted"`
+	ConnectedByID        pgtype.UUID        `json:"connected_by_id"`
+	CreatedAt            pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt            pgtype.Timestamptz `json:"updated_at"`
+}
+
+type AsanaProjectBinding struct {
+	ID                     pgtype.UUID        `json:"id"`
+	WorkspaceID            pgtype.UUID        `json:"workspace_id"`
+	ConnectionID           pgtype.UUID        `json:"connection_id"`
+	AsanaProjectGid        string             `json:"asana_project_gid"`
+	AsanaProjectName       string             `json:"asana_project_name"`
+	ProjectID              pgtype.UUID        `json:"project_id"`
+	DefaultAgentID         pgtype.UUID        `json:"default_agent_id"`
+	AgentFieldGid          string             `json:"agent_field_gid"`
+	StatusMap              []byte             `json:"status_map"`
+	WebhookGid             string             `json:"webhook_gid"`
+	WebhookSecretEncrypted string             `json:"webhook_secret_encrypted"`
+	Status                 string             `json:"status"`
+	CreatedByID            pgtype.UUID        `json:"created_by_id"`
+	CreatedAt              pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt              pgtype.Timestamptz `json:"updated_at"`
+}
+
+type AsanaTaskLink struct {
+	ID              pgtype.UUID        `json:"id"`
+	WorkspaceID     pgtype.UUID        `json:"workspace_id"`
+	BindingID       pgtype.UUID        `json:"binding_id"`
+	AsanaTaskGid    string             `json:"asana_task_gid"`
+	IssueID         pgtype.UUID        `json:"issue_id"`
+	AsanaModifiedAt pgtype.Timestamptz `json:"asana_modified_at"`
+	LastSyncedAt    pgtype.Timestamptz `json:"last_synced_at"`
+	CreatedAt       pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt       pgtype.Timestamptz `json:"updated_at"`
+}
+
 type Attachment struct {
 	ID              pgtype.UUID        `json:"id"`
 	WorkspaceID     pgtype.UUID        `json:"workspace_id"`
