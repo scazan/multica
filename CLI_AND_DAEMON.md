@@ -1041,6 +1041,22 @@ The CLI exposes cron-based `schedule` triggers via `trigger-add`, and `webhook`
 triggers via `trigger-add --kind webhook` plus `trigger-rotate-url`. The data model
 also defines an `api` kind, which is not surfaced here.
 
+## Asana Integration
+
+Connects an Asana workspace so Asana projects can be mirrored into Multica issues that agents own. The server must set `MULTICA_ASANA_SECRET_KEY` (see `.env.example`); the token is stored encrypted and never returned.
+
+```bash
+# Connect with a personal access token (keep it out of shell history)
+echo "$ASANA_PAT" | multica asana connect --token-stdin
+multica asana connect --token-file ~/.asana-pat
+
+# Pick the Asana workspace when the token can see several
+multica asana connect --token-stdin --asana-workspace <gid>
+
+multica asana list
+multica asana disconnect <connection-id>   # removes bindings; mirrored issues stay
+```
+
 ## Other Commands
 
 ```bash

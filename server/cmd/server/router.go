@@ -1312,6 +1312,20 @@ func NewRouterWithOptions(pool *pgxpool.Pool, hub *realtime.Hub, bus *events.Bus
 		slog.Info("vcs integration disabled (MULTICA_VCS_SECRET_KEY not set)")
 	}
 
+	// Asana at-rest encryption: the box encrypts per-workspace Asana access
+	// tokens and webhook secrets. Without it the connect handler returns 403.
+	if asanaKey, err := secretbox.LoadKey("MULTICA_ASANA_SECRET_KEY"); err == nil {
+		box, err := secretbox.New(asanaKey)
+		if err != nil {
+			slog.Error("asana: secretbox.New failed; asana integration disabled", "error", err)
+		} else {
+			h.AsanaSecretBox = box
+			slog.Info("asana integration enabled")
+		}
+	} else {
+		slog.Info("asana integration disabled (MULTICA_ASANA_SECRET_KEY not set)")
+	}
+
 	// Plugin secrets use a dedicated deployment key. Keeping this separate from
 	// VCS and channel secrets gives operators an isolated rotation and blast
 	// radius; without it, saving a `secret` config field fails closed rather
@@ -1711,6 +1725,9 @@ func NewRouterWithOptions(pool *pgxpool.Pool, hub *realtime.Hub, bus *events.Bus
 					// for the same reason as GitHub installations; connect /
 					// disconnect are admin-gated in the group below.
 					r.Get("/vcs/connections", h.ListVCSConnections)
+					// Asana connections — member-visible for the same reason;
+					// connect / disconnect are admin-gated below.
+					r.Get("/asana/connections", h.ListAsanaConnections)
 					// Custom runtime profiles — listing/reading is member-visible
 					// (the Runtime page renders for everyone; create/edit/delete
 					// are admin-gated below).
@@ -1798,6 +1815,9 @@ func NewRouterWithOptions(pool *pgxpool.Pool, hub *realtime.Hub, bus *events.Bus
 					r.Post("/vcs/connections", h.ConnectVCS)
 					r.Post("/vcs/connections/{connectionId}/rotate-webhook", h.RotateVCSConnectionWebhook)
 					r.Delete("/vcs/connections/{connectionId}", h.DeleteVCSConnection)
+					// Asana connect / disconnect (admin-only).
+					r.Post("/asana/connections", h.ConnectAsana)
+					r.Delete("/asana/connections/{connectionId}", h.DeleteAsanaConnection)
 				})
 
 				// Lark integration. Every endpoint here only requires

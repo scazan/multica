@@ -406,6 +406,14 @@ type Handler struct {
 	// error rather than silently storing plaintext. Wired in
 	// cmd/server/router.go after New.
 	VCSSecretBox *secretbox.Box
+	// AsanaSecretBox encrypts/decrypts per-workspace Asana access tokens and
+	// webhook secrets at rest. Nil when MULTICA_ASANA_SECRET_KEY is unset;
+	// connect returns 403 in that case so a misconfigured deployment never
+	// stores plaintext. Wired in cmd/server/router.go after New.
+	AsanaSecretBox *secretbox.Box
+	// AsanaBaseURL overrides the Asana API endpoint. Empty means the public
+	// API; tests point it at a fake server.
+	AsanaBaseURL string
 	// PluginSurfaceTokens seal short-lived launch claims. Nil disables surface
 	// launches; wired from a domain-separated MULTICA_PLUGIN_SECRET_KEY at boot.
 	PluginSurfaceTokens *secretbox.Box

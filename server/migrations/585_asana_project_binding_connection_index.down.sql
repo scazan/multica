@@ -1,0 +1,1 @@
+DROP INDEX CONCURRENTLY IF EXISTS idx_asana_project_binding_connection;
